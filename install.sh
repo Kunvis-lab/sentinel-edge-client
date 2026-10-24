@@ -28,11 +28,6 @@ PUBKEY_SHA=08aff65705c22bf0052e74ffa43f79dcb8292e784e176c717b48efc52a7c7453
 CA_SHA=1855e6dd6093a295114536c17879e15e801b377f444c365c98164b70c9905936
 RELPUB_SHA=6d6951bdfe11efb4124c1bb952e892c2ab79d548a0d19c1c8fe465875646488c
 
-[ -z "$DIST_BASE" ] && { printf '[ERROR] 缺少分发地址：请加 --dist <供应商提供的分发地址>
-' >&2; exit 2; }
-[ -z "$PLATFORM_URL" ] && { printf '[ERROR] 缺少平台地址：请加 --platform <供应商提供的平台地址>
-' >&2; exit 2; }
-
 LAN_IFACE="" DRY=0 REINSTALL=0 ASSUME_YES=0 AUTOSTART=1 ACTIVATE=1 UNINSTALL=0 PURGE=0
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -49,6 +44,11 @@ while [ $# -gt 0 ]; do
     *) printf '[ERROR] 未知参数：%s\n' "$1" >&2; exit 2 ;;
   esac
 done
+
+[ -z "$DIST_BASE" ] && { printf '[ERROR] 缺少分发地址：请加 --dist <供应商提供的分发地址>
+' >&2; exit 2; }
+[ -z "$PLATFORM_URL" ] && { printf '[ERROR] 缺少平台地址：请加 --platform <供应商提供的平台地址>
+' >&2; exit 2; }
 
 START_TS=$(date +%s)
 STAGE_DESC="准备" ERR_CODE="INTERNAL" STATE_NOTES="" BACKUP_PATH=""
