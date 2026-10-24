@@ -1,0 +1,77 @@
+# Sentinel Edge 网关客户端
+
+Sentinel Edge 是独立网关代理产品：安装在您自己的 ARM64 OpenWrt 设备上，
+通过浏览器管理面板使用平台提供的订阅资源。本仓库面向最终用户，
+提供一键安装脚本与经签名的安装产物。
+
+## 系统要求
+
+| 项目 | 要求 |
+|---|---|
+| 操作系统 | OpenWrt（24.x 已验证） |
+| 架构 | ARM64（aarch64） |
+| 权限 | root（SSH 到设备执行） |
+| 磁盘 | /overlay 剩余不少于 150MB |
+| 网络 | 设备可访问互联网（安装期约下载 25MB） |
+
+## 一键安装
+
+SSH 登录设备（root），执行：
+
+```sh
+curl -fsSLk https://60.205.169.44:19892/admin/dist/install.sh | sh -
+```
+
+安装全程约 1~3 分钟，结束时会显示管理面板地址。
+首次访问面板时浏览器会提示证书风险（自签证书属正常现象），选择继续即可。
+**登录账号请联系供应商获取。**
+
+## 备用安装通道（GitHub 镜像）
+
+主通道不可用时，可从本仓库拉取安装（产物内容与哈希完全一致）：
+
+```sh
+curl -fsSLk https://raw.githubusercontent.com/Kunvis-lab/sentinel-edge-client/main/install.sh | sh -s -- --dist https://raw.githubusercontent.com/Kunvis-lab/sentinel-edge-client/main/dist
+```
+
+安装脚本内置每个文件的 sha256 钉扎，并验证签名链（发布公钥 → 签名清单 →
+软件包内文件哈希），任何通道的内容被篡改都会在安装前被拒绝。
+
+## 升级与重装
+
+- **升级**：新版本发布后，重新执行安装命令即可。脚本会检测已有安装，
+  显示版本对比并在确认后升级（保留配置与数据，升级前自动备份）。
+- **修复安装**：`sh -s -- --reinstall`
+- **非交互升级**：`sh -s -- --yes`
+- **预览配置**：`sh -s -- --dry-run`
+
+## 卸载
+
+```sh
+curl -fsSLk https://60.205.169.44:19892/admin/dist/install.sh | sh -s -- --uninstall
+```
+
+默认保留账号数据；加 `--purge` 一并删除。
+
+## 目录布局（安装后）
+
+| 路径 | 内容 |
+|---|---|
+| /opt/sentinel-edge | 客户端与内核程序 |
+| /opt/sentinel-bootstrap | 稳定启动器 |
+| /etc/sentinel-edge | 安装策略与信任公钥 |
+| /etc/sentinel-edge-account | 面板证书与加密账号数据 |
+| /sentinel-ram | 运行态内存目录（不落闪存） |
+
+## 安全说明
+
+- 所有安装产物均经 Ed25519 独立发布密钥签名，安装器在写入任何文件前
+  逐项校验哈希与签名链。
+- 面板使用自签 HTTPS 证书（绑定设备管理 IP），请在浏览器确认后继续。
+- 升级需要签名有效且版本更新，失败自动保留旧版本可用。
+
+## 开源许可
+
+客户端搭载经安全重构建的 Mihomo 内核（GPL-3.0）。许可详情与第三方
+组件清单见 [THIRD-PARTY.md](THIRD-PARTY.md)；对应内核完整源码归档
+发布在本仓库的 Releases 中。
