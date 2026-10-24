@@ -18,20 +18,22 @@ Sentinel Edge 是独立网关代理产品：安装在您自己的 ARM64 OpenWrt 
 
 SSH 登录设备（root），执行：
 
+安装命令由供应商提供（请勿将安装地址转发给未授权人员）：
+
 ```sh
-curl -fsSLk https://60.205.169.44:19892/admin/dist/install.sh | sh -
+curl -fsSLk <供应商提供的安装地址> | sh -
 ```
 
 安装全程约 1~3 分钟，结束时会显示管理面板地址。
 首次访问面板时浏览器会提示证书风险（自签证书属正常现象），选择继续即可。
 **登录账号请联系供应商获取。**
 
-## 备用安装通道（GitHub 镜像）
+## 备用安装通道
 
-主通道不可用时，可从本仓库拉取安装（产物内容与哈希完全一致）：
+主通道不可用时，使用供应商提供的备用分发地址（产物内容与哈希完全一致）：
 
 ```sh
-curl -fsSLk https://raw.githubusercontent.com/Kunvis-lab/sentinel-edge-client/main/install.sh | sh -s -- --dist https://raw.githubusercontent.com/Kunvis-lab/sentinel-edge-client/main/dist
+curl -fsSLk <供应商提供的安装地址> | sh -s -- --dist <供应商提供的备用分发地址>
 ```
 
 安装脚本内置每个文件的 sha256 钉扎，并验证签名链（发布公钥 → 签名清单 →
@@ -48,7 +50,7 @@ curl -fsSLk https://raw.githubusercontent.com/Kunvis-lab/sentinel-edge-client/ma
 ## 卸载
 
 ```sh
-curl -fsSLk https://60.205.169.44:19892/admin/dist/install.sh | sh -s -- --uninstall
+curl -fsSLk <供应商提供的安装地址> | sh -s -- --uninstall
 ```
 
 默认保留账号数据；加 `--purge` 一并删除。
